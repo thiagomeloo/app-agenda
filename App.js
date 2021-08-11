@@ -4,10 +4,13 @@ import { TextInput, View, FlatList, Alert, Text } from 'react-native';
 //components
 import ItemList from './src/components/ItemList';
 import Button from './src/components/Button';
+import ButtonOrder from './src/components/ButtonOrder';
+
 import Data from './src/service/Data';
 
 //styles
 import style from './src/styles/AppStyle';
+
 
 export default function App() {
 
@@ -42,6 +45,8 @@ export default function App() {
   }, [lista])
 
   const [nameBtn, setNameBtn] = useState('Salvar');
+  const [orderList, setOrderList] = useState('asc');
+
 
 
   /**
@@ -153,6 +158,46 @@ export default function App() {
     clearInputs();
   };
 
+  /**
+   * Ordena a lista crescente
+   */
+  const sortAsc = () => {
+    let listAux = lista.sort(
+      function (x, y) {
+        let a = x.name.toUpperCase(),
+          b = y.name.toUpperCase();
+        return a == b ? 0 : a > b ? 1 : -1;
+      });
+    setLista(listAux.map(item => { return item }));
+  }
+
+  /**
+   * Ordena a lista decrescente
+   */
+  const sortDesc = () => {
+    let listAux = lista.sort(
+      function (x, y) {
+        let a = x.name.toUpperCase(),
+          b = y.name.toUpperCase();
+        return a == b ? 0 : a < b ? 1 : -1;
+      });
+    setLista(listAux.map(item => { return item }));
+  }
+
+  /**
+   * Auxilia na troca do icon e ordenacao da lista
+   */
+  const auxOrder = () => {
+    if (orderList == 'asc') {
+      sortDesc();
+      setOrderList('desc');
+    } else {
+      sortAsc();
+      setOrderList('asc');
+
+    }
+  }
+
   return (
     <View style={style.container}>
 
@@ -199,6 +244,11 @@ export default function App() {
         <Button text={nameBtn} onPress={() => { saveItem() }} />
 
       </View>
+
+      <ButtonOrder
+        order={orderList}
+        onPress={() => { auxOrder() }}
+      />
 
       <FlatList
         style={style.list}
